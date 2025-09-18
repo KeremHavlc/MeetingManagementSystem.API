@@ -6,5 +6,6 @@
         public Guid UserId { get; set; }
         public string Status { get; set; }
         public Decision Decision { get; set; }
+        public AppUser AppUser { get; set; }
     }
 }

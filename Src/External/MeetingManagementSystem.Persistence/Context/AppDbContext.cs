@@ -1,9 +1,11 @@
 ﻿using MeetingManagementSystem.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace MeetingManagementSystem.Persistence.Context
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : IdentityDbContext<AppUser , IdentityRole<Guid> , Guid>
     {
         public AppDbContext(DbContextOptions options) : base(options)
         {
@@ -17,6 +19,9 @@ namespace MeetingManagementSystem.Persistence.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            //Identity Tablolarını yeniden adlandırma
+            modelBuilder.Entity<AppUser>(b => b.ToTable("Users"));
 
             //Meeting -> Decision (1:N)
             modelBuilder.Entity<Decision>()
@@ -38,6 +43,35 @@ namespace MeetingManagementSystem.Persistence.Context
                 .WithMany(d => d.DecisionAssignments)
                 .HasForeignKey(da => da.DecisionId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            //AppUser -> DecisionAssignment (1:N)
+            modelBuilder.Entity<DecisionAssignment>()
+                .HasOne(ap => ap.AppUser)
+                .WithMany(da => da.DecisionAssignments)
+                .HasForeignKey(ap => ap.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            //AppUser -> MeetingParticipant (1:N)
+            modelBuilder.Entity<MeetingParticipant>()
+                .HasOne(ap => ap.AppUser)
+                .WithMany(mp => mp.MeetingParticipants)
+                .HasForeignKey(ap => ap.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            //AppUser -> Meeting (1:N)
+            modelBuilder.Entity<Meeting>()
+                .HasOne(ap => ap.AppUser)
+                .WithMany(me => me.Meetings)
+                .HasForeignKey(ap => ap.CreatedByUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            //Identity Kütüphanesinde kullanılmayacak tabloların kaldırılması
+            modelBuilder.Ignore<IdentityUserLogin<Guid>>();
+            modelBuilder.Ignore<IdentityUserToken<Guid>>();
+            modelBuilder.Ignore<IdentityUserClaim<Guid>>();
+            modelBuilder.Ignore<IdentityRoleClaim<Guid>>();
+            modelBuilder.Ignore<IdentityUserRole<Guid>>();
+                                
         }
     }
 }

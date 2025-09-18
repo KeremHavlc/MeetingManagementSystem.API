@@ -9,5 +9,6 @@
 
         public ICollection<Decision> Decisions { get; set; }
         public ICollection<MeetingParticipant>  MeetingParticipants{ get; set; }
+        public AppUser AppUser { get; set; }
     }
 }

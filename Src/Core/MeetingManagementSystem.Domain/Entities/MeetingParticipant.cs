@@ -7,5 +7,6 @@
         public string Role { get; set; }
 
         public Meeting Meeting { get; set; }
+        public AppUser AppUser { get; set; }
     }
 }
