@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MeetingManagementSystem.Persistence.Context
 {
-    public class AppDbContext : IdentityDbContext<AppUser , IdentityRole<Guid> , Guid>
+    public class AppDbContext : IdentityDbContext<AppUser , AppRole , Guid>
     {
         public AppDbContext(DbContextOptions options) : base(options)
         {
@@ -22,6 +22,7 @@ namespace MeetingManagementSystem.Persistence.Context
 
             //Identity Tablolarını yeniden adlandırma
             modelBuilder.Entity<AppUser>(b => b.ToTable("Users"));
+            modelBuilder.Entity<AppRole>(b => b.ToTable("Roles"));
 
             //Meeting -> Decision (1:N)
             modelBuilder.Entity<Decision>()
@@ -63,6 +64,14 @@ namespace MeetingManagementSystem.Persistence.Context
                 .HasOne(ap => ap.AppUser)
                 .WithMany(me => me.Meetings)
                 .HasForeignKey(ap => ap.CreatedByUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+            //User silinse bile meeting kalsın demek ---> Restrict
+
+            //AppRole -> MeetingParticipant (1:N)
+            modelBuilder.Entity<MeetingParticipant>()
+                .HasOne(ar => ar.AppRole)
+                .WithMany(me => me.MeetingParticipants)
+                .HasForeignKey(ar => ar.RoleId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             //Identity Kütüphanesinde kullanılmayacak tabloların kaldırılması

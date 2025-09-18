@@ -4,9 +4,10 @@
     {
         public Guid MeetingId { get; set; }
         public Guid UserId { get; set; }
-        public string Role { get; set; }
+        public Guid RoleId { get; set; }
 
         public Meeting Meeting { get; set; }
         public AppUser AppUser { get; set; }
+        public AppRole AppRole { get; set; }
     }
 }
