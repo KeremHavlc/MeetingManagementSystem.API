@@ -17,7 +17,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Core\MeetingManagementSystem.Application\MeetingManagementSystem.Application.csproj" />
-    <ProjectReference Include="..\..\Core\MeetingManagementSystem.Domain\MeetingManagementSystem.Domain.csproj" />
   </ItemGroup>
 
 </Project>
