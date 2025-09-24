@@ -11,6 +11,11 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(conn
 //Persistence Tier Service Registration
 builder.Services.AddPersistenceService();
 
+//Controller baþka katmana eklendi!
+builder.Services.AddControllers()
+    .AddApplicationPart(typeof(MeetingManagementSystem.Presentation.AssemblyReference).Assembly);
+
+
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
