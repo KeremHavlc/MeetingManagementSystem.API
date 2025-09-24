@@ -1,5 +1,7 @@
+using MeetingManagementSystem.Domain.Entities;
 using MeetingManagementSystem.Persistence;
 using MeetingManagementSystem.Persistence.Context;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +17,30 @@ builder.Services.AddPersistenceService();
 builder.Services.AddControllers()
     .AddApplicationPart(typeof(MeetingManagementSystem.Presentation.AssemblyReference).Assembly);
 
+//Identity ekle
+builder.Services.AddIdentity<AppUser, AppRole>(options =>
+{
+    options.User.RequireUniqueEmail = true;
+    options.Password.RequiredLength = 6;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireDigit = false;
+    options.User.AllowedUserNameCharacters =
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+    options.SignIn.RequireConfirmedEmail = true;
+    options.Lockout.MaxFailedAccessAttempts = 3;
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(30);
+})
+.AddSignInManager<SignInManager<AppUser>>()//SignInManager için
+.AddEntityFrameworkStores<AppDbContext>();
+
+
+
+//MediatR Service Registration
+builder.Services.AddMediatR(cfr =>
+{
+    cfr.RegisterServicesFromAssembly(typeof(MeetingManagementSystem.Application.AssemblyReference).Assembly);
+});
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
