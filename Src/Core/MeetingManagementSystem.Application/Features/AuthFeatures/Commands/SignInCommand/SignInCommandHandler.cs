@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 
-namespace MeetingManagementSystem.Application.Features.AuthFeatures.SignInCommand
+namespace MeetingManagementSystem.Application.Features.AuthFeatures.Commands.SignInCommand
 {
     public class SignInCommandHandler : IRequestHandler<SignInCommand, MessageResponse>
     {

@@ -4,7 +4,7 @@ using MeetingManagementSystem.Domain.Dtos;
 using MeetingManagementSystem.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 
-namespace MeetingManagementSystem.Application.Features.AuthFeatures.RegisterCommand
+namespace MeetingManagementSystem.Application.Features.AuthFeatures.Commands.RegisterCommand
 {
     public class RegisterCommandHandler : IRequestHandler<RegisterCommand, MessageResponse>
     {

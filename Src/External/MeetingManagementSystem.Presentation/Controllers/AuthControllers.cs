@@ -1,7 +1,8 @@
 ﻿using MediatR;
-using MeetingManagementSystem.Application.Features.AuthFeatures.LoginCommand;
-using MeetingManagementSystem.Application.Features.AuthFeatures.RegisterCommand;
-using MeetingManagementSystem.Application.Features.AuthFeatures.SignInCommand;
+using MeetingManagementSystem.Application.Features.AuthFeatures.Commands.ChangePasswordCommand;
+using MeetingManagementSystem.Application.Features.AuthFeatures.Commands.LoginCommand;
+using MeetingManagementSystem.Application.Features.AuthFeatures.Commands.RegisterCommand;
+using MeetingManagementSystem.Application.Features.AuthFeatures.Commands.SignInCommand;
 using MeetingManagementSystem.Presentation.Abstraction;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,6 +27,12 @@ namespace MeetingManagementSystem.Presentation.Controllers
         }
         [HttpPost("[action]")]
         public async Task<IActionResult> SignIn(SignInCommand request , CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(request, cancellationToken);
+            return Ok(result);
+        }
+        [HttpPost("[action]")]
+        public async Task<IActionResult> ChangePassword(ChangePasswordCommand request , CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request, cancellationToken);
             return Ok(result);

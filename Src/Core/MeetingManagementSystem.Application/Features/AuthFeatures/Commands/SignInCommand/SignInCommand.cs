@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using MeetingManagementSystem.Domain.Dtos;
 
-namespace MeetingManagementSystem.Application.Features.AuthFeatures.SignInCommand
+namespace MeetingManagementSystem.Application.Features.AuthFeatures.Commands.SignInCommand
 {
     public class SignInCommand : IRequest<MessageResponse>
     {

@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using MeetingManagementSystem.Domain.Dtos;
 
-namespace MeetingManagementSystem.Application.Features.AuthFeatures.RegisterCommand
+namespace MeetingManagementSystem.Application.Features.AuthFeatures.Commands.RegisterCommand
 {
     public class RegisterCommand : IRequest<MessageResponse>
     {
