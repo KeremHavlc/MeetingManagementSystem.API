@@ -31,10 +31,11 @@ builder.Services.AddIdentity<AppUser, AppRole>(options =>
     options.Lockout.MaxFailedAccessAttempts = 3;
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(30);
 })
-.AddSignInManager<SignInManager<AppUser>>()//SignInManager için
+.AddSignInManager<SignInManager<AppUser>>() //SignInManager için
+.AddDefaultTokenProviders()
 .AddEntityFrameworkStores<AppDbContext>();
 
-
+builder.Services.AddDataProtection();
 
 //MediatR Service Registration
 builder.Services.AddMediatR(cfr =>
