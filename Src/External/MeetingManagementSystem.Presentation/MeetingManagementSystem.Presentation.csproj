@@ -10,8 +10,4 @@
     <ProjectReference Include="..\..\Core\MeetingManagementSystem.Application\MeetingManagementSystem.Application.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.0" />
-  </ItemGroup>
-
 </Project>
