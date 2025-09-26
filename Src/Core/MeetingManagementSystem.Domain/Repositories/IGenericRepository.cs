@@ -10,6 +10,7 @@ namespace MeetingManagementSystem.Domain.Repositories
         Task<TEntity> GetSingleAsync(Expression<Func<TEntity, bool>> filter);
         Task<TEntity> GetByIdAsync(Guid id);
 
+        void Add(TEntity entity);
         Task AddAsync(TEntity entity);
         Task AddRangeAsync(List<TEntity> entities);
         Task UpdateAsync(TEntity entity);

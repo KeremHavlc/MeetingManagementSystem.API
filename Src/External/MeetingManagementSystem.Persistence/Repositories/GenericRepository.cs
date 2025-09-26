@@ -17,7 +17,11 @@ namespace MeetingManagementSystem.Persistence.Repositories
             _context = context;
             _entity = _context.Set<TEntity>();
         }
-
+        public void Add(TEntity entity)
+        {
+            _context.Add(entity);
+            _context.SaveChangesAsync();
+        }
         public async Task AddAsync(TEntity entity)
         {
             await _context.AddAsync(entity);
@@ -83,5 +87,6 @@ namespace MeetingManagementSystem.Persistence.Repositories
             return await _entity.Where(e=>e.IsActive).Where(filter).ToListAsync();
         }
 
+       
     }
 }
