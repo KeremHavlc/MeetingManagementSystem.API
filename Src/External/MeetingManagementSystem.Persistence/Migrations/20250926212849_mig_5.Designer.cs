@@ -4,6 +4,7 @@ using MeetingManagementSystem.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MeetingManagementSystem.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250926212849_mig_5")]
+    partial class mig_5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -226,6 +229,9 @@ namespace MeetingManagementSystem.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("AppRoleId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -245,6 +251,8 @@ namespace MeetingManagementSystem.Persistence.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AppRoleId");
 
                     b.HasIndex("MeetingId");
 
@@ -321,6 +329,10 @@ namespace MeetingManagementSystem.Persistence.Migrations
 
             modelBuilder.Entity("MeetingManagementSystem.Domain.Entities.MeetingParticipant", b =>
                 {
+                    b.HasOne("MeetingManagementSystem.Domain.Entities.AppRole", null)
+                        .WithMany("MeetingParticipants")
+                        .HasForeignKey("AppRoleId");
+
                     b.HasOne("MeetingManagementSystem.Domain.Entities.Meeting", "Meeting")
                         .WithMany("MeetingParticipants")
                         .HasForeignKey("MeetingId")
@@ -344,6 +356,11 @@ namespace MeetingManagementSystem.Persistence.Migrations
                     b.Navigation("Meeting");
 
                     b.Navigation("MeetingRole");
+                });
+
+            modelBuilder.Entity("MeetingManagementSystem.Domain.Entities.AppRole", b =>
+                {
+                    b.Navigation("MeetingParticipants");
                 });
 
             modelBuilder.Entity("MeetingManagementSystem.Domain.Entities.AppUser", b =>

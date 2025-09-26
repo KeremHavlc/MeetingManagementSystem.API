@@ -15,7 +15,7 @@ namespace MeetingManagementSystem.Persistence.Context
         public DbSet<DecisionAssignment> DecisionAssignments { get; set; }
         public DbSet<Meeting> Meetings { get; set; }
         public DbSet<MeetingParticipant> MeetingParticipants { get; set; }
-
+        public DbSet<MeetingRole> MeetingRole { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -67,12 +67,12 @@ namespace MeetingManagementSystem.Persistence.Context
                 .OnDelete(DeleteBehavior.Restrict);
             //User silinse bile meeting kalsın demek ---> Restrict
 
-            //AppRole -> MeetingParticipant (1:N)
+            //MeetingRole -> MeetingParticipant (1:N)
             modelBuilder.Entity<MeetingParticipant>()
-                .HasOne(ar => ar.AppRole)
-                .WithMany(me => me.MeetingParticipants)
-                .HasForeignKey(ar => ar.RoleId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasOne(mr => mr.MeetingRole)
+                .WithMany(mr => mr.MeetingParticipants)
+                .HasForeignKey(mr => mr.RoleId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             //Identity Kütüphanesinde kullanılmayacak tabloların kaldırılması
             modelBuilder.Ignore<IdentityUserLogin<Guid>>();

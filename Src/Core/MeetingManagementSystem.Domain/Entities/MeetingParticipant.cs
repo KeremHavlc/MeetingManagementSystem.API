@@ -8,6 +8,6 @@
 
         public Meeting Meeting { get; set; }
         public AppUser AppUser { get; set; }
-        public AppRole AppRole { get; set; }
+        public MeetingRole MeetingRole { get; set; }
     }
 }
