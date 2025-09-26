@@ -1,6 +1,7 @@
 using MeetingManagementSystem.Domain.Entities;
 using MeetingManagementSystem.Persistence;
 using MeetingManagementSystem.Persistence.Context;
+using MeetingManagementSystem.WebAPI.OptionsSetup;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -42,6 +43,12 @@ builder.Services.AddMediatR(cfr =>
 {
     cfr.RegisterServicesFromAssembly(typeof(MeetingManagementSystem.Application.AssemblyReference).Assembly);
 });
+
+//Jwt Configurations Service Registration
+builder.Services.ConfigureOptions<JwtOptionsSetup>();
+builder.Services.ConfigureOptions<JwtBearerOptionsSetup>();
+//Jwt Ayarlarý
+builder.Services.AddAuthentication().AddJwtBearer();
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
