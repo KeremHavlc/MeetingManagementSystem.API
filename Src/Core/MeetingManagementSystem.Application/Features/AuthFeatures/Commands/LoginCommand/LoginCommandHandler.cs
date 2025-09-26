@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using MeetingManagementSystem.Application.Abstractions;
 using MeetingManagementSystem.Domain.Dtos;
 using MeetingManagementSystem.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
@@ -9,10 +10,12 @@ namespace MeetingManagementSystem.Application.Features.AuthFeatures.Commands.Log
     public class LoginCommandHandler : IRequestHandler<LoginCommand, MessageResponse>
     {
         private readonly UserManager<AppUser> _userManager;
+        private readonly IJwtProvider _jwtProvider;
 
-        public LoginCommandHandler(UserManager<AppUser> userManager)
+        public LoginCommandHandler(UserManager<AppUser> userManager, IJwtProvider jwtProvider)
         {
             _userManager = userManager;
+            _jwtProvider = jwtProvider;
         }
 
         public async Task<MessageResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
@@ -35,9 +38,10 @@ namespace MeetingManagementSystem.Application.Features.AuthFeatures.Commands.Log
                     Success = false
                 };
             }
+            var token = _jwtProvider.CreateToken(user);
             return new MessageResponse
             {
-                Message = "Giriş Başarılıdır",
+                Message = token,
                 Success = true
             };
         }

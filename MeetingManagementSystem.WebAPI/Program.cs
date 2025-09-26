@@ -1,4 +1,6 @@
+using MeetingManagementSystem.Application.Abstractions;
 using MeetingManagementSystem.Domain.Entities;
+using MeetingManagementSystem.Infrastructure.Authentication;
 using MeetingManagementSystem.Persistence;
 using MeetingManagementSystem.Persistence.Context;
 using MeetingManagementSystem.WebAPI.OptionsSetup;
@@ -49,6 +51,8 @@ builder.Services.ConfigureOptions<JwtOptionsSetup>();
 builder.Services.ConfigureOptions<JwtBearerOptionsSetup>();
 //Jwt Ayarlarý
 builder.Services.AddAuthentication().AddJwtBearer();
+//JwtProvider Service Registration
+builder.Services.AddScoped<IJwtProvider, JwtProvider>();
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
