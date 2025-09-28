@@ -36,7 +36,7 @@ namespace MeetingManagementSystem.Application.Features.MeetingFeatures.Commands.
                     Message = "Kullanıcının bu tarihte toplantısı mevcuttur!",
                     Success = false
                 };
-            }
+            }           
             var meeting = request.Adapt<Meeting>();
              _meetingRepository.Add(meeting);
 
