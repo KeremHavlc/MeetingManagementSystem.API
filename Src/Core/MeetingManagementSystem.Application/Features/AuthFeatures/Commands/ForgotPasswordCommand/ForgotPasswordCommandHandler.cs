@@ -29,8 +29,9 @@ namespace MeetingManagementSystem.Application.Features.AuthFeatures.Commands.For
             string token = await _userManager.GeneratePasswordResetTokenAsync(user);
             return new MessageResponse
             {
-                Message = token,
-                Success = true
+                Message = "Token oluşturuldu",
+                Success = true,
+                Data = token
             };
         }
     }

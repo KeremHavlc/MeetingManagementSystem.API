@@ -41,8 +41,9 @@ namespace MeetingManagementSystem.Application.Features.AuthFeatures.Commands.Log
             var token = _jwtProvider.CreateToken(user);
             return new MessageResponse
             {
-                Message = token,
-                Success = true
+                Message = "Giriş başarılı!",
+                Success = true,
+                Data = token
             };
         }
 

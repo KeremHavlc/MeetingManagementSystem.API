@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using MeetingManagementSystem.Application.Abstractions;
 using MeetingManagementSystem.Domain.Dtos;
 using MeetingManagementSystem.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
@@ -11,11 +12,13 @@ namespace MeetingManagementSystem.Application.Features.AuthFeatures.Commands.Sig
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly IJwtProvider _jwtProvider;
 
-        public SignInCommandHandler(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+        public SignInCommandHandler(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IJwtProvider jwtProvider)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _jwtProvider = jwtProvider;
         }
 
         public async Task<MessageResponse> Handle(SignInCommand request, CancellationToken cancellationToken)
@@ -66,10 +69,12 @@ namespace MeetingManagementSystem.Application.Features.AuthFeatures.Commands.Sig
                     Success = false
                 };
             }
+            var token = _jwtProvider.CreateToken(user);
             return new MessageResponse
             {
                 Message = "Giriş Başarılı!",
-                Success = true
+                Success = true,
+                Data = token
             };
 
         }
