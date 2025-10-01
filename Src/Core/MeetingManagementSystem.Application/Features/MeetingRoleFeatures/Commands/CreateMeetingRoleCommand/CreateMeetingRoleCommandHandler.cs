@@ -19,7 +19,7 @@ namespace MeetingManagementSystem.Application.Features.MeetingRoleFeatures.Comma
           Yapılacaklar
                         1->MeetingRole Crud (GetAll , GetById , GetByName , DeleteRole)
                         2->MessageResponse Data eklenmesi
-                        3->CreateMeeting de otomatik admin rol ataması
+                        3->CreateMeeting de otomatik admin rol ataması -- CREATE MEETİNG EKLEMİYOR 
                         4->CreateMeeting de otomatik MeetingParticipant oluşturulması
         */
 
