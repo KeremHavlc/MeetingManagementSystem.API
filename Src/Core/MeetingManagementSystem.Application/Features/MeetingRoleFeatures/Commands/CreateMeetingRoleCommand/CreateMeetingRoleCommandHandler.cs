@@ -14,16 +14,6 @@ namespace MeetingManagementSystem.Application.Features.MeetingRoleFeatures.Comma
         {
             _meetingRoleRepository = meetingRoleRepository;
         }
-
-        /*
-          Yapılacaklar
-                        1->MeetingRole Crud (GetAll , GetById , GetByName , DeleteRole)
-                        2->MessageResponse Data eklenmesi
-                        3->CreateMeeting de otomatik admin rol ataması -- CREATE MEETİNG EKLEMİYOR 
-                        4->CreateMeeting de otomatik MeetingParticipant oluşturulması
-        */
-
-
         public async Task<MessageResponse> Handle(CreateMeetingRoleCommand request, CancellationToken cancellationToken)
         {
             var existRole = await _meetingRoleRepository.GetWhereAsync(mr => mr.RoleName == request.RoleName);

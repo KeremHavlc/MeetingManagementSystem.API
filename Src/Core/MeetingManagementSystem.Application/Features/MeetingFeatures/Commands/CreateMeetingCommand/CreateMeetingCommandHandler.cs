@@ -11,10 +11,14 @@ namespace MeetingManagementSystem.Application.Features.MeetingFeatures.Commands.
     {
         private readonly IMeetingRepository _meetingRepository;
         private readonly UserManager<AppUser> _userManager;
-        public CreateMeetingCommandHandler(IMeetingRepository meetingRepository, UserManager<AppUser> userManager)
+        private readonly IMeetingParticipantRepository _meetingParticipantRepository;
+        private readonly IMeetingRoleRepository _meetingRoleRepository;
+        public CreateMeetingCommandHandler(IMeetingRepository meetingRepository, UserManager<AppUser> userManager, IMeetingParticipantRepository meetingParticipantRepository, IMeetingRoleRepository meetingRoleRepository)
         {
             _meetingRepository = meetingRepository;
             _userManager = userManager;
+            _meetingParticipantRepository = meetingParticipantRepository;
+            _meetingRoleRepository = meetingRoleRepository;
         }
 
         public async Task<MessageResponse> Handle(CreateMeetingCommand request, CancellationToken cancellationToken)
@@ -37,8 +41,32 @@ namespace MeetingManagementSystem.Application.Features.MeetingFeatures.Commands.
                     Success = false
                 };
             }           
+            //Toplantı oluşturma işlemi
             var meeting = request.Adapt<Meeting>();
              _meetingRepository.Add(meeting);
+           
+            //Toplantı oluşturulduğunda oluşturan kişinin otomatik olarak Admin Rolü ile Toplantı Katılımcılarına eklenmesi işlemleri
+            var createdMeetingId = meeting.Id;
+            var meetingRoles = await _meetingRoleRepository.GetAllAsync();
+            var adminRole = meetingRoles.FirstOrDefault(rm => rm.RoleName == "Admin");
+
+            if(adminRole == null)
+            {
+                return new MessageResponse
+                {
+                    Message = "Admin rolü bulunmamaktadır.",
+                    Success = false
+                };
+            }
+
+            var meetingParticipant = new MeetingParticipant
+            {
+                MeetingId = createdMeetingId,
+                UserId = request.CreatedByUserId,
+                RoleId = adminRole.Id
+            };
+
+            await _meetingParticipantRepository.AddAsync(meetingParticipant);
 
             return new MessageResponse
             {
