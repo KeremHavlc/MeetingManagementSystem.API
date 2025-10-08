@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using MeetingManagementSystem.Application.Features.MeetingFeatures.Commands.CreateMeetingCommand;
+using MeetingManagementSystem.Application.Features.MeetingFeatures.Commands.DeleteMeetingCommand;
 using MeetingManagementSystem.Application.Features.MeetingFeatures.Queries.GetMeetingByIdQuery;
 using MeetingManagementSystem.Application.Features.MeetingFeatures.Queries.GetMeetingsByUserIdQuery;
 using MeetingManagementSystem.Presentation.Abstraction;
@@ -14,6 +15,12 @@ namespace MeetingManagementSystem.Presentation.Controllers
         }
         [HttpPost("[action]")]
         public async Task<IActionResult> CreateMeeting(CreateMeetingCommand request, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(request, cancellationToken);
+            return Ok(result);
+        }
+        [HttpPost("[action]")]
+        public async Task<IActionResult> DeleteMeeting(DeleteMeetingCommand request, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request, cancellationToken);
             return Ok(result);
