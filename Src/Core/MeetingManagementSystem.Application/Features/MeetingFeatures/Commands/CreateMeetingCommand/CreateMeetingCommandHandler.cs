@@ -43,7 +43,7 @@ namespace MeetingManagementSystem.Application.Features.MeetingFeatures.Commands.
             }           
             //Toplantı oluşturma işlemi
             var meeting = request.Adapt<Meeting>();
-             _meetingRepository.Add(meeting);
+            await _meetingRepository.AddAsync(meeting);
            
             //Toplantı oluşturulduğunda oluşturan kişinin otomatik olarak Admin Rolü ile Toplantı Katılımcılarına eklenmesi işlemleri
             var createdMeetingId = meeting.Id;
