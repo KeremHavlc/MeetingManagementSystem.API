@@ -43,7 +43,7 @@ namespace MeetingManagementSystem.Application.Features.MeetingParticipantFeature
             {
                 return new MessageResponse
                 {
-                    Message = "Hatalı meetingId formatı!",
+                    Message = "Hatalı userId formatı!",
                     Success = false
                 };
             }
@@ -56,7 +56,7 @@ namespace MeetingManagementSystem.Application.Features.MeetingParticipantFeature
                     Success = false
                 };
             }
-            var existMeetingParticipant = await _meetingParticipantRepository.GetSingleAsync(uid => uid.UserId == userId);
+            var existMeetingParticipant = await _meetingParticipantRepository.GetSingleAsync(uid => uid.MeetingId == meetingId && uid.UserId == userId);
 
             if(existMeetingParticipant != null)
             {

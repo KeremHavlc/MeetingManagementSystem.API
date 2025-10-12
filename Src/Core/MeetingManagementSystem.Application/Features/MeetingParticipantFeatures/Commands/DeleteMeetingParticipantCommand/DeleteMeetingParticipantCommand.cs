@@ -5,5 +5,7 @@ namespace MeetingManagementSystem.Application.Features.MeetingParticipantFeature
 {
     public class DeleteMeetingParticipantCommand : IRequest<MessageResponse>
     {
+        public string UserId { get; set; }
+        public string MeetingId { get; set; }
     }
 }
