@@ -19,8 +19,7 @@ namespace MeetingManagementSystem.Application.Features.MeetingParticipantFeature
             _meetingParticipantRepository = meetingParticipantRepository;
             _userManager = userManager;
             _meetingRoleRepository = meetingRoleRepository;
-        }
-        //Eklenmek istenen kullanıcının zaten toplantıda olup olmadığının kontrolünü sağlamayı unutma !
+        }      
         public async Task<MessageResponse> Handle(AddMeetingParticipantCommand request, CancellationToken cancellationToken)
         {
             if (!Guid.TryParse(request.MeetingId, out Guid meetingId))
@@ -57,9 +56,20 @@ namespace MeetingManagementSystem.Application.Features.MeetingParticipantFeature
                     Success = false
                 };
             }
+            var existMeetingParticipant = await _meetingParticipantRepository.GetSingleAsync(uid => uid.UserId == userId);
+
+            if(existMeetingParticipant != null)
+            {
+                return new MessageResponse
+                {
+                    Message = "Bu kullanıcı zaten toplantıda katılımcıdır.",
+                    Success = false
+                };
+            }
            
             var roleEntity = (await _meetingRoleRepository.GetWhereAsync(r => r.RoleName == "Participant"))
                 .FirstOrDefault();
+
             if (roleEntity == null)
                 return new MessageResponse { Message = "Participant rolü bulunamadı!", Success = false };
 
