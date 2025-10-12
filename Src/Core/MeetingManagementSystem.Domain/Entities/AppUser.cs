@@ -7,6 +7,7 @@ namespace MeetingManagementSystem.Domain.Entities
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string FullName => string.Join(" ", FirstName, LastName);
+        public Guid RoleId { get; set; }
 
         public ICollection<Meeting> Meetings { get; set; }
         public ICollection<MeetingParticipant> MeetingParticipants { get; set; }
