@@ -4,8 +4,12 @@ using MeetingManagementSystem.Infrastructure.Authentication;
 using MeetingManagementSystem.Persistence;
 using MeetingManagementSystem.Persistence.Context;
 using MeetingManagementSystem.WebAPI.OptionsSetup;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +23,8 @@ builder.Services.AddPersistenceService();
 //Controller baþka katmana eklendi!
 builder.Services.AddControllers()
     .AddApplicationPart(typeof(MeetingManagementSystem.Presentation.AssemblyReference).Assembly);
-
+// HttpContextAccessor Service Registration
+builder.Services.AddHttpContextAccessor();
 //Identity ekle
 builder.Services.AddIdentity<AppUser, AppRole>(options =>
 {
@@ -45,15 +50,46 @@ builder.Services.AddMediatR(cfr =>
 {
     cfr.RegisterServicesFromAssembly(typeof(MeetingManagementSystem.Application.AssemblyReference).Assembly);
 });
+//Authentication Service
 
 //Jwt Configurations Service Registration
 builder.Services.ConfigureOptions<JwtOptionsSetup>();
 builder.Services.ConfigureOptions<JwtBearerOptionsSetup>();
 //Jwt Ayarlarý
-builder.Services.AddAuthentication().AddJwtBearer();
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer();
+builder.Services.AddAuthorization();
 //JwtProvider Service Registration
 builder.Services.AddScoped<IJwtProvider, JwtProvider>();
+builder.Services.AddSwaggerGen(setup =>
+{
+    var jwtSecuritySheme = new OpenApiSecurityScheme
+    {
+        BearerFormat = "JWT",
+        Name = "JWT Authentication",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = JwtBearerDefaults.AuthenticationScheme,
+        Description = "Put **_ONLY_** yourt JWT Bearer token on textbox below!",
 
+        Reference = new OpenApiReference
+        {
+            Id = JwtBearerDefaults.AuthenticationScheme,
+            Type = ReferenceType.SecurityScheme
+        }
+    };
+
+    setup.AddSecurityDefinition(jwtSecuritySheme.Reference.Id, jwtSecuritySheme);
+
+    setup.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    { jwtSecuritySheme, Array.Empty<string>() }
+                });
+});
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
@@ -69,9 +105,10 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
 app.MapControllers();
+
+app.UseAuthentication(); 
+app.UseAuthorization();  
+
 
 app.Run();

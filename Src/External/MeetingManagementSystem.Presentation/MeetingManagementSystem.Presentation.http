@@ -1,0 +1,10 @@
+﻿@MeetingManagementSystem.Presentation_HostAddress = 
+
+POST {{MeetingManagementSystem.Presentation_HostAddress}}/api/MeetingParticipant/AddMeetingParticipant
+Content-Type: application/json
+
+{
+  //AddMeetingParticipantCommand
+}
+
+###
