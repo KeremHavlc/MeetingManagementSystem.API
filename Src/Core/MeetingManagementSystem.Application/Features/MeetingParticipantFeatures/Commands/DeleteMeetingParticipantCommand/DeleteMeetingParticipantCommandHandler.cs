@@ -16,6 +16,8 @@ namespace MeetingManagementSystem.Application.Features.MeetingParticipantFeature
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly UserManager<AppUser> _userManager;
 
+
+
         public DeleteMeetingParticipantCommandHandler(UserManager<AppUser> userManager, IHttpContextAccessor httpContextAccessor, IMeetingRoleRepository meetingRoleRepository, IMeetingRepository meetingRepository, IMeetingParticipantRepository meetingParticipantRepository)
         {
             _userManager = userManager;
