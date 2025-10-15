@@ -26,78 +26,113 @@ namespace MeetingManagementSystem.Application.Features.MeetingParticipantFeature
         }
 
         public async Task<MessageResponse> Handle(DeleteMeetingParticipantCommand request, CancellationToken cancellationToken)
-        {
-            if(!Guid.TryParse(request.DeleteUserId , out Guid deleteUserId))
+        {            
+            if (!Guid.TryParse(request.DeleteUserId, out Guid deleteUserId))
             {
-                return new MessageResponse
-                {
-                    Message = "Geçersiz userId formatı",
-                    Success = false
-                };
-            }
-            if(!Guid.TryParse(request.MeetingId , out Guid meetingId))
-            {
-                return new MessageResponse
-                {
-                    Message = "Geçersiz meetingId formatı",
-                    Success = false
-                };
-            }
-            var currentUserIdClaim = _httpContextAccessor.HttpContext?.User?.FindFirst("Id")?.Value;
-            if (string.IsNullOrEmpty(currentUserIdClaim))
-            {
-                return new MessageResponse
-                {
-                    Message = "Yetkisiz kullanıcı!",
-                    Success = false
-                };
-            }
-            if(!Guid.TryParse(currentUserIdClaim , out Guid currentUserId))
-            {
-                return new MessageResponse
-                {
-                    Message = "Geçersizk userId formatı",
-                    Success = false
-                };
-            }
-            var existDeleteUser = await _userManager.FindByIdAsync(request.DeleteUserId);
-            if(existDeleteUser == null)
-            {
-                return new MessageResponse
-                {
-                    Message = "Silinmek istenen kullanıcı bulunamadı!",
-                    Success = false
-                };
-            }
-            var existMeeting = await _meetingRepository.GetSingleAsync(mr => mr.Id == meetingId);
-            if(existMeeting == null)
-            {
-                return new MessageResponse
-                {
-                    Message = "Toplantı bulunamadı!",
-                    Success = false
-                };
+                return new MessageResponse { Message = "Geçersiz userId formatı", Success = false };
             }
 
-            var currentParticipant = (await _meetingParticipantRepository.GetWhereAsync(mp => mp.MeetingId == meetingId && mp.UserId == currentUserId)).FirstOrDefault();
+            if (!Guid.TryParse(request.MeetingId, out Guid meetingId))
+            {
+                return new MessageResponse { Message = "Geçersiz meetingId formatı", Success = false };
+            }
+
+            var currentUserIdClaim = _httpContextAccessor.HttpContext?.User?.FindFirst("Id")?.Value;
+            if (string.IsNullOrEmpty(currentUserIdClaim) || !Guid.TryParse(currentUserIdClaim, out Guid currentUserId))
+            {
+                return new MessageResponse { Message = "Yetkisiz kullanıcı!", Success = false };
+            }
+
+            var existDeleteUser = await _userManager.FindByIdAsync(request.DeleteUserId);
+            if (existDeleteUser == null)
+            {
+                return new MessageResponse { Message = "Silinmek istenen kullanıcı bulunamadı!", Success = false };
+            }
+
+            var existMeeting = await _meetingRepository.GetSingleAsync(m => m.Id == meetingId);
+            if (existMeeting == null)
+            {
+                return new MessageResponse { Message = "Toplantı bulunamadı!", Success = false };
+            }
+
+            var currentParticipant = (await _meetingParticipantRepository.GetWhereAsync(mp => mp.UserId == currentUserId && mp.MeetingId == meetingId)).FirstOrDefault();
             if(currentParticipant == null)
             {
                 return new MessageResponse
                 {
-                    Message = "Toplantıya katılımcı değilsiniz!",
+                    Message = "Kullanıcı toplantıda bulunamadı!",
                     Success = false
                 };
             }
 
-            var meetingRole = await _meetingRoleRepository.GetByIdAsync(currentParticipant.RoleId);
-            if(meetingRole == null)
+            var currentRole = await _meetingRoleRepository.GetByIdAsync(currentParticipant.RoleId);
+            if(currentRole == null)
             {
                 return new MessageResponse
                 {
-                    Message = "Rol bilgisi bulunamadı!",
+                    Message = "Rol bilgisi alınamadı!",
                     Success = false
                 };
             }
+
+            var deleteParticipant = (await _meetingParticipantRepository.GetWhereAsync(mp => mp.UserId == deleteUserId && mp.MeetingId == meetingId)).FirstOrDefault();
+            if(deleteParticipant == null)
+            {
+                return new MessageResponse
+                {
+                    Message = "Silinmek istenen kullanıcı toplantıda bulunamadı!",
+                    Success = false
+                };
+            }
+
+            var deleteRole = await _meetingRoleRepository.GetByIdAsync(deleteParticipant.RoleId);
+            if(deleteRole == null)
+            {
+                return new MessageResponse
+                {
+                    Message = "Rol Bilgisi alınamadı!",
+                    Success = false
+                };
+            }
+
+            if(currentRole.RoleName == "Admin")
+            {
+                await _meetingParticipantRepository.RemoveAsync(deleteParticipant.Id);
+            }
+            else if(currentRole.RoleName == "Moderator")
+            {
+                if(deleteRole.RoleName == "Admin")
+                {
+                    return new MessageResponse
+                    {
+                        Message = "Admin kullanıcısını silmeye yetkiniz yoktur!",
+                        Success = false
+                    };
+                }
+                await _meetingParticipantRepository.RemoveAsync(deleteParticipant.Id);
+
+            }
+            else
+            {
+                return new MessageResponse
+                {
+                    Message = "Bu işlemi yapmaya yetkiniz yoktur!",
+                    Success = false
+                };
+            }
+            if (deleteUserId == currentUserId)
+            {
+                return new MessageResponse
+                {
+                    Message = "Kendi kendinizi silemezsiniz!",
+                    Success = false
+                };
+            }
+            return new MessageResponse
+            {
+                Message = "Katılımcı başarıyla silindi.",
+                Success = true
+            };
         }
     }
 }
