@@ -4,6 +4,6 @@ namespace MeetingManagementSystem.Domain.Repositories
 {
     public interface IMeetingParticipantRepository : IGenericRepository<MeetingParticipant>
     {
-        Task<List<MeetingParticipant>> GetMeetingParticipantsWithUsersAsync(Guid meetingId);
+        Task<List<Object>> GetMeetingParticipantsWithUsersAsync(Guid meetingId);
     }
 }

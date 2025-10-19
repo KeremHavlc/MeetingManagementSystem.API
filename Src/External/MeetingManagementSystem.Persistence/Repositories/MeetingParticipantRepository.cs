@@ -13,12 +13,23 @@ namespace MeetingManagementSystem.Persistence.Repositories
             _context = context;
         }
 
-        public async Task<List<MeetingParticipant>> GetMeetingParticipantsWithUsersAsync(Guid meetingId)
+        public async Task<List<Object>> GetMeetingParticipantsWithUsersAsync(Guid meetingId)
         {
             return await _context.MeetingParticipants
-                .Include(mp => mp.AppUser)
                 .Where(mp => mp.MeetingId == meetingId)
-                .ToListAsync();
+                .Select(mp => new
+                {
+                    mp.Id,
+                    mp.RoleId,
+                    mp.MeetingId,
+                    AppUser = new
+                    {
+                        mp.AppUser.Id,
+                        mp.AppUser.UserName,
+                        mp.AppUser.Email
+                    }
+        })
+        .ToListAsync<object>();
         }
     }
 }
