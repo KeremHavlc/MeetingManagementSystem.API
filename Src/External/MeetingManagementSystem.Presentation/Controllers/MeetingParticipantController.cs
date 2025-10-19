@@ -1,6 +1,4 @@
 ﻿using MediatR;
-using MeetingManagementSystem.Application.Features.MeetingFeatures.Commands.DeleteMeetingCommand;
-using MeetingManagementSystem.Application.Features.MeetingFeatures.Queries.GetMeetingByIdQuery;
 using MeetingManagementSystem.Application.Features.MeetingParticipantFeatures.Commands.AddMeetingParticipantCommand;
 using MeetingManagementSystem.Application.Features.MeetingParticipantFeatures.Commands.DeleteMeetingParticipantCommand;
 using MeetingManagementSystem.Application.Features.MeetingParticipantFeatures.Queries.GetMeetingParticipantsQuery;
