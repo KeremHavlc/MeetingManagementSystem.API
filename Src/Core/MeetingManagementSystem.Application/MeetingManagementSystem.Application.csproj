@@ -15,4 +15,8 @@
     <ProjectReference Include="..\MeetingManagementSystem.Domain\MeetingManagementSystem.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\DecisionAssignmentFeatures\Queries\" />
+  </ItemGroup>
+
 </Project>
