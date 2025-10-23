@@ -90,6 +90,16 @@ builder.Services.AddSwaggerGen(setup =>
                     { jwtSecuritySheme, Array.Empty<string>() }
                 });
 });
+//Cors ayarlarý
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("OpenCorsPolicy", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
@@ -103,6 +113,7 @@ if (app.Environment.IsDevelopment())
 }
 app.UseSwagger();
 app.UseSwaggerUI();
+app.UseCors("OpenCorsPolicy");
 
 app.UseHttpsRedirection();
 app.MapControllers();

@@ -71,7 +71,8 @@ namespace MeetingManagementSystem.Application.Features.MeetingFeatures.Commands.
             return new MessageResponse
             {
                 Message = "Toplantı başarıyla oluşturuldu!",
-                Success = true
+                Success = true,
+                Data = meeting.Id
             };
         }
     }
