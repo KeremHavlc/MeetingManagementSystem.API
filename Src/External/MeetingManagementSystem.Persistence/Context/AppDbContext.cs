@@ -16,6 +16,7 @@ namespace MeetingManagementSystem.Persistence.Context
         public DbSet<Meeting> Meetings { get; set; }
         public DbSet<MeetingParticipant> MeetingParticipants { get; set; }
         public DbSet<MeetingRole> MeetingRole { get; set; }
+        public DbSet<ChatMessage> ChatMessage { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -73,7 +74,21 @@ namespace MeetingManagementSystem.Persistence.Context
                 .WithMany(mr => mr.MeetingParticipants)
                 .HasForeignKey(mr => mr.RoleId)
                 .OnDelete(DeleteBehavior.Cascade);
+            
+            //ChatMessage Entity Rules
+            
+            modelBuilder.Entity<ChatMessage>(entity =>
+            {
+                entity.ToTable("ChatMessages");
+                entity.HasKey(x => x.Id);
 
+                entity.Property(x => x.Message)
+                      .IsRequired()
+                      .HasMaxLength(2000);
+
+                entity.Property(x => x.CreatedAt)
+                      .HasDefaultValueSql("GETUTCDATE()");
+            });
             //Identity Kütüphanesinde kullanılmayacak tabloların kaldırılması
             modelBuilder.Ignore<IdentityUserLogin<Guid>>();
             modelBuilder.Ignore<IdentityUserToken<Guid>>();
