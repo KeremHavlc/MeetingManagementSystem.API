@@ -1,8 +1,10 @@
 using MeetingManagementSystem.Application.Abstractions;
 using MeetingManagementSystem.Domain.Entities;
+using MeetingManagementSystem.Infrastructure;
 using MeetingManagementSystem.Infrastructure.Authentication;
 using MeetingManagementSystem.Persistence;
 using MeetingManagementSystem.Persistence.Context;
+using MeetingManagementSystem.WebAPI.Hubs;
 using MeetingManagementSystem.WebAPI.OptionsSetup;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -19,6 +21,8 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(conn
 
 //Persistence Tier Service Registration
 builder.Services.AddPersistenceService();
+//Infrastructure Tier Service Registration
+builder.Services.AddInfrastructureService();
 
 //Controller baþka katmana eklendi!
 builder.Services.AddControllers()
@@ -90,16 +94,23 @@ builder.Services.AddSwaggerGen(setup =>
                     { jwtSecuritySheme, Array.Empty<string>() }
                 });
 });
-//Cors ayarlarý
+//SignalR Service Registration
+builder.Services.AddSignalR();
+// CORS ayarlarý
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("OpenCorsPolicy", policy =>
     {
-        policy.AllowAnyOrigin()
-              .AllowAnyHeader()
-              .AllowAnyMethod();
+        policy.WithOrigins(
+            "http://localhost:5173",
+            "http://localhost:5174"
+        )
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowCredentials();
     });
 });
+
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
@@ -113,13 +124,16 @@ if (app.Environment.IsDevelopment())
 }
 app.UseSwagger();
 app.UseSwaggerUI();
-app.UseCors("OpenCorsPolicy");
 
 app.UseHttpsRedirection();
+app.UseCors("OpenCorsPolicy"); 
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapHub<ChatHub>("/chatHub");
 app.MapControllers();
 
-app.UseAuthentication(); 
-app.UseAuthorization();  
-
+app.MapControllers();
 
 app.Run();

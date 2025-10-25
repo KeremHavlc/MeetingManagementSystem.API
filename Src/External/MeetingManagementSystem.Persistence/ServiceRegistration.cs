@@ -13,6 +13,7 @@ namespace MeetingManagementSystem.Persistence
             service.AddScoped<IDecisionRepository, DecisionRepository>();
             service.AddScoped<IDecisionAssignmentRepository, DecisionAssignmentRepository>();
             service.AddScoped<IMeetingRoleRepository, MeetingRoleRepository>();
+            service.AddScoped<IChatMessageRepository, ChatMessageRepository>();
         }
     }
 }

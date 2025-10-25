@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using MeetingManagementSystem.Application.Features.MeetingParticipantFeatures.Commands.AddMeetingParticipantCommand;
 using MeetingManagementSystem.Application.Features.MeetingParticipantFeatures.Commands.DeleteMeetingParticipantCommand;
+using MeetingManagementSystem.Application.Features.MeetingParticipantFeatures.Queries.GetMeetingParticipantByUserIdQuery;
 using MeetingManagementSystem.Application.Features.MeetingParticipantFeatures.Queries.GetMeetingParticipantsQuery;
 using MeetingManagementSystem.Presentation.Abstraction;
 using Microsoft.AspNetCore.Authorization;
@@ -29,6 +30,12 @@ namespace MeetingManagementSystem.Presentation.Controllers
         }
         [HttpPost("[action]")]
         public async Task<IActionResult> GetMeetingParticipantsWithUsersAsync(GetMeetingParticipantsQuery request , CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(request, cancellationToken);
+            return Ok(result);
+        }
+        [HttpPost("[action]")]
+        public async Task<IActionResult> GetMeetingParticipantsByUserId(GetMeetingParticipantByUserIdQuery request , CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request, cancellationToken);
             return Ok(result);
