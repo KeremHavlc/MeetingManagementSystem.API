@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using MeetingManagementSystem.Application.Features.UserFeatures.Queries.GetUserIdByUsernameOrEmailQuery;
 using MeetingManagementSystem.Application.Features.UserFeatures.Queries.GetUserNameByIdQuery;
 using MeetingManagementSystem.Presentation.Abstraction;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +16,13 @@ namespace MeetingManagementSystem.Presentation.Controllers
         {
             var result = await _mediator.Send(request, cancellationToken);
             return Ok(result);
-        } 
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> GetUserIdByUsernameOrEmail(GetUserIdByUsernameOrEmailQuery request , CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(request, cancellationToken);
+            return Ok(result);
+        }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using MediatR;
 using MeetingManagementSystem.Application.Features.MeetingParticipantFeatures.Commands.AddMeetingParticipantCommand;
 using MeetingManagementSystem.Application.Features.MeetingParticipantFeatures.Commands.DeleteMeetingParticipantCommand;
+using MeetingManagementSystem.Application.Features.MeetingParticipantFeatures.Commands.JoinMeetingFromInviteCommand;
+using MeetingManagementSystem.Application.Features.MeetingParticipantFeatures.Queries.GetMeetingParticipantByMeetingIdQuery;
 using MeetingManagementSystem.Application.Features.MeetingParticipantFeatures.Queries.GetMeetingParticipantByUserIdQuery;
 using MeetingManagementSystem.Application.Features.MeetingParticipantFeatures.Queries.GetMeetingParticipantsQuery;
 using MeetingManagementSystem.Presentation.Abstraction;
@@ -36,6 +38,19 @@ namespace MeetingManagementSystem.Presentation.Controllers
         }
         [HttpPost("[action]")]
         public async Task<IActionResult> GetMeetingParticipantsByUserId(GetMeetingParticipantByUserIdQuery request , CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(request, cancellationToken);
+            return Ok(result);
+        }
+        [HttpPost("[action]")]
+        public async Task<IActionResult> JoinFromInvite(JoinMeetingFromInviteCommand request , CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(request, cancellationToken);
+            return Ok(result);
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> GetMeetingParticipantByMeetingId(GetMeetingParticipantByMeetingIdQuery request , CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request, cancellationToken);
             return Ok(result);
