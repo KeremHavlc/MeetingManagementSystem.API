@@ -3,6 +3,7 @@ using MeetingManagementSystem.Application.Features.MeetingParticipantFeatures.Qu
 using MeetingManagementSystem.Domain.Dtos;
 using MeetingManagementSystem.Domain.Entities;
 using MeetingManagementSystem.Domain.Repositories;
+using Microsoft.AspNetCore.Identity;
 
 namespace MeetingManagementSystem.Application.Features.MeetingParticipantFeatures.Queries.GetMeetingParticipantByMeetingIdQuery
 {
@@ -10,11 +11,15 @@ namespace MeetingManagementSystem.Application.Features.MeetingParticipantFeature
     {
         private readonly IMeetingRepository _meetingRepository;
         private readonly IMeetingParticipantRepository _meetingParticipantRepository;
+        private readonly UserManager<AppUser> _userManager;
+        private readonly IMeetingRoleRepository _meetingRoleRepository;
 
-        public GetMeetingParticipantByMeetingIdQueryHandler(IMeetingParticipantRepository meetingParticipantRepository, IMeetingRepository meetingRepository)
+        public GetMeetingParticipantByMeetingIdQueryHandler(IMeetingParticipantRepository meetingParticipantRepository, IMeetingRepository meetingRepository, IMeetingRoleRepository meetingRoleRepository, UserManager<AppUser> userManager)
         {
             _meetingParticipantRepository = meetingParticipantRepository;
             _meetingRepository = meetingRepository;
+            _meetingRoleRepository = meetingRoleRepository;
+            _userManager = userManager;
         }
 
         public async Task<MessageResponse> Handle(GetMeetingParticipantByMeetingIdQuery request, CancellationToken cancellationToken)
@@ -45,12 +50,21 @@ namespace MeetingManagementSystem.Application.Features.MeetingParticipantFeature
                     Success = false
                 };
             }
-            var participantDtos = meetingParticipant.Select(mp => new MeetingParticipantDto
+            var participantDtos = new List<MeetingParticipantDto>();
+            foreach (var mp in meetingParticipant)
             {
-                UserId = mp.UserId,
-                RoleId = mp.RoleId
-            }).ToList();
+                var user = await _userManager.FindByIdAsync(mp.UserId.ToString());
+                var role = await _meetingRoleRepository.GetSingleAsync(r => r.Id == mp.RoleId);
 
+                participantDtos.Add(new MeetingParticipantDto
+                {
+                    UserId = mp.UserId,
+                    Username = user?.UserName ?? "Bilinmiyor",
+                    RoleId = mp.RoleId,
+                    RoleName = role?.RoleName ?? "Bilinmiyor"
+
+                });
+            }
             return new MessageResponse
             {
                 Message = "Toplantı katılımcıları başarıyla bulunmuştur!",

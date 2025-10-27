@@ -41,7 +41,7 @@ namespace MeetingManagementSystem.Application.Features.MeetingParticipantFeature
                 x => x.MeetingId == meetingId && x.UserId == userId);
 
             if (existing != null)
-                return new MessageResponse { Message = "Zaten toplantı katılımcısısın.", Success = true };
+                return new MessageResponse { Message = "Zaten toplantı katılımcısısın.", Success = false };
 
             var participantRole = (await _meetingRoleRepository.GetWhereAsync(r => r.RoleName == "Participant"))
                 .FirstOrDefault();
