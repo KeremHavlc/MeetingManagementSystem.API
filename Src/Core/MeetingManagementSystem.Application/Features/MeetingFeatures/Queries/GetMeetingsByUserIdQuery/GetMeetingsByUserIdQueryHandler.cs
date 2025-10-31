@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using MeetingManagementSystem.Application.Features.MeetingFeatures.Dtos;
 using MeetingManagementSystem.Domain.Dtos;
 using MeetingManagementSystem.Domain.Repositories;
 
@@ -7,10 +8,11 @@ namespace MeetingManagementSystem.Application.Features.MeetingFeatures.Queries.G
     public class GetMeetingsByUserIdQueryHandler : IRequestHandler<GetMeetingsByUserIdQuery, MessageResponse>
     {
         private readonly IMeetingRepository _meetingRepository;
-
-        public GetMeetingsByUserIdQueryHandler(IMeetingRepository meetingRepository)
+        private readonly IMeetingParticipantRepository _meetingParticipantRepository;
+        public GetMeetingsByUserIdQueryHandler(IMeetingRepository meetingRepository, IMeetingParticipantRepository meetingParticipantRepository)
         {
             _meetingRepository = meetingRepository;
+            _meetingParticipantRepository = meetingParticipantRepository;
         }
 
         public async Task<MessageResponse> Handle(GetMeetingsByUserIdQuery request, CancellationToken cancellationToken)
@@ -23,20 +25,44 @@ namespace MeetingManagementSystem.Application.Features.MeetingFeatures.Queries.G
                     Success = false
                 };
             }
-            var meeting = await _meetingRepository.GetWhereAsync(mr => mr.CreatedByUserId == userId);
-            if(meeting == null)
+            var participantMeetings = await _meetingParticipantRepository.GetWhereAsync(mp => mp.UserId == userId);
+            var participantMeetingIds = participantMeetings.Select(mp => mp.MeetingId).Distinct().ToList();
+
+            var createdMeetings = await _meetingRepository.GetWhereAsync(m => m.CreatedByUserId == userId);
+
+            var allMeetingIds = createdMeetings.Select(m => m.Id)
+                .Concat(participantMeetingIds)
+                .Distinct()
+                .ToList();
+
+            var meetings = await _meetingRepository.GetWhereAsync(m => allMeetingIds.Contains(m.Id));
+
+            if (meetings == null || !meetings.Any())
             {
                 return new MessageResponse
                 {
-                    Message = "Kullanıcının toplantıları bulunamadı!",
-                    Success = false
+                    Message = "Kullanıcının bulunduğu toplantı bulunamadı!",
+                    Success = true,
+                    Data = new List<MeetingSummaryDto>()
                 };
             }
+
+            var meetingDtos = meetings.Select(m => new MeetingSummaryDto
+            {
+                Id = m.Id,
+                Title = m.Title,
+                Description = m.Description,
+                ScheduledAt = m.ScheduledAt,
+                CreatedByUserId = m.CreatedByUserId,
+                IsActive = m.IsActive,
+                CreatedAt = m.CreatedAt
+            }).ToList();
+
             return new MessageResponse
             {
-                Message = "Toplantı başarıyla bulundu!",
+                Message = "Kullanıcının bulunduğu toplantılar başarıyla getirildi!",
                 Success = true,
-                Data = meeting
+                Data = meetingDtos
             };
         }
     }
