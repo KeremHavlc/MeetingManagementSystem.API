@@ -6,19 +6,23 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MeetingManagementSystem.Presentation.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class MeetingInviteController : ApiController
     {
         public MeetingInviteController(IMediator mediator) : base(mediator)
         {
         }
-        [HttpPost("[action]")]
-        public async Task<IActionResult> CreateInviteLink(CreateMeetingInviteCommand request , CancellationToken cancellationToken)
+
+        [HttpPost("CreateInviteLink")]
+        public async Task<IActionResult> CreateInviteLink([FromBody] CreateMeetingInviteCommand request, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request, cancellationToken);
             return Ok(result);
         }
-        [HttpPost("[action]")]
-        public async Task<IActionResult> ValidateToken(ValidateInviteTokenQuery request , CancellationToken cancellationToken)
+
+        [HttpPost("ValidateToken")]
+        public async Task<IActionResult> ValidateToken([FromBody] ValidateInviteTokenQuery request, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request, cancellationToken);
             return Ok(result);

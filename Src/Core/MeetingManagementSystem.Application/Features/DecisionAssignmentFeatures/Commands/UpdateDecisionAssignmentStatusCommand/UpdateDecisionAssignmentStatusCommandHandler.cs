@@ -38,7 +38,7 @@ namespace MeetingManagementSystem.Application.Features.DecisionAssignmentFeature
             return new MessageResponse
             {
                 Message = "Karar durumu başarıyla değiştirildi!",
-                Success = false
+                Success = true
             };
 
         }

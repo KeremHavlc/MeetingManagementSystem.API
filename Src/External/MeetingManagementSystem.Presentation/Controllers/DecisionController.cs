@@ -9,43 +9,51 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MeetingManagementSystem.Presentation.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class DecisionController : ApiController
     {
         public DecisionController(IMediator mediator) : base(mediator)
         {
         }
-        [HttpPost("[action]")]
-        public async Task<IActionResult> CreateDecision (CreateDecisionCommand request , CancellationToken cancellationToken)
+
+        [HttpPost("CreateDecision")]
+        public async Task<IActionResult> CreateDecision([FromBody] CreateDecisionCommand request, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request, cancellationToken);
+            if (!result.Success) return BadRequest(result);
             return Ok(result);
         }
 
-        [HttpPost("[action]")]
-        public async Task<IActionResult> DeleteDecision(DeleteDecisionCommand request , CancellationToken cancellationToken)
+        [HttpDelete("DeleteDecision")]
+        public async Task<IActionResult> DeleteDecision([FromBody] DeleteDecisionCommand request, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request, cancellationToken);
+            if (!result.Success) return BadRequest(result);
             return Ok(result);
         }
 
-        [HttpPost("[action]")]
-        public async Task<IActionResult> UpdateDecision(UpdateDecisionCommand request , CancellationToken cancellationToken)
+        [HttpPut("UpdateDecision")]
+        public async Task<IActionResult> UpdateDecision([FromBody] UpdateDecisionCommand request, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request, cancellationToken);
+            if (!result.Success) return BadRequest(result);
             return Ok(result);
         }
 
-        [HttpPost("[action]")]
-        public async Task<IActionResult> GetDecisionByMeetingId(GetDecisionsByMeetingIdQuery request , CancellationToken cancellationToken)
+        [HttpPost("GetDecisionByMeetingId")]
+        public async Task<IActionResult> GetDecisionByMeetingId([FromBody] GetDecisionsByMeetingIdQuery request, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request, cancellationToken);
+            if (!result.Success) return BadRequest(result);
             return Ok(result);
         }
 
-        [HttpPost("[action]")]
-        public async Task<IActionResult> GetDecisionById(GetDecisionByIdQuery request , CancellationToken cancellationToken)
+        [HttpPost("GetDecisionById")]
+        public async Task<IActionResult> GetDecisionById([FromBody] GetDecisionByIdQuery request, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request, cancellationToken);
+            if (!result.Success) return BadRequest(result);
             return Ok(result);
         }
     }

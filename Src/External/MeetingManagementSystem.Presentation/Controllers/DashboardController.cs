@@ -7,27 +7,35 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MeetingManagementSystem.Presentation.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class DashboardController : ApiController
     {
         public DashboardController(IMediator mediator) : base(mediator)
         {
         }
-        [HttpPost("[action]")]
-        public async Task<IActionResult> GetDashboardStats(GetDashboardStatsQuery request, CancellationToken cancellationToken)
+
+        [HttpPost("GetDashboardStats")]
+        public async Task<IActionResult> GetDashboardStats([FromBody] GetDashboardStatsQuery request, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request, cancellationToken);
+            if (!result.Success) return BadRequest(result);
             return Ok(result);
         }
-        [HttpPost("[action]")]
-        public async Task<IActionResult> GetUpcomingMeetings([FromBody] GetUpcomingMeetingsQuery query)
+
+        [HttpPost("GetUpcomingMeetings")]
+        public async Task<IActionResult> GetUpcomingMeetings([FromBody] GetUpcomingMeetingsQuery query, CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(query);
+            var result = await _mediator.Send(query, cancellationToken);
+            if (!result.Success) return BadRequest(result);
             return Ok(result);
         }
-        [HttpPost("[action]")]
-        public async Task<IActionResult> GetMeetingStatistics([FromBody] GetMeetingStatisticsQuery query)
+
+        [HttpPost("GetMeetingStatistics")]
+        public async Task<IActionResult> GetMeetingStatistics([FromBody] GetMeetingStatisticsQuery query, CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(query);
+            var result = await _mediator.Send(query, cancellationToken);
+            if (!result.Success) return BadRequest(result);
             return Ok(result);
         }
     }

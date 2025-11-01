@@ -11,57 +11,67 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MeetingManagementSystem.Presentation.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class DecisionAssignmentController : ApiController
     {
         public DecisionAssignmentController(IMediator mediator) : base(mediator)
         {
         }
-        [HttpPost("[action]")]
-        public async Task<IActionResult> CreateDecisionAssignment(CreateDecisionAssignmentCommand request , CancellationToken cancellationToken)
+
+        [HttpPost("CreateDecisionAssignment")]
+        public async Task<IActionResult> CreateDecisionAssignment([FromBody] CreateDecisionAssignmentCommand request, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request, cancellationToken);
+            if (!result.Success) return BadRequest(result);
             return Ok(result);
         }
 
-        [HttpPost("[action]")]
-        public async Task<IActionResult> DeleteDecisionAssignment(DeleteDecisionAssignmentCommand request , CancellationToken cancellationToken)
+        [HttpDelete("DeleteDecisionAssignment")]
+        public async Task<IActionResult> DeleteDecisionAssignment([FromBody] DeleteDecisionAssignmentCommand request, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request, cancellationToken);
+            if (!result.Success) return BadRequest(result);
             return Ok(result);
         }
 
-        [HttpPost("[action]")]
-        public async Task<IActionResult> UpdateDecisionAssignmentStatus(UpdateDecisionAssignmentStatusCommand request , CancellationToken cancellationToken)
+        [HttpPut("UpdateDecisionAssignmentStatus")]
+        public async Task<IActionResult> UpdateDecisionAssignmentStatus([FromBody] UpdateDecisionAssignmentStatusCommand request, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request, cancellationToken);
+            if (!result.Success) return BadRequest(result);
             return Ok(result);
         }
 
-        [HttpPost("[action]")]
-        public async Task<IActionResult> GetDecisionAssignmentByDecisionId(GetDecisionAssignmentByDecisionIdQuery request , CancellationToken cancellationToken)
+        [HttpPost("GetDecisionAssignmentByDecisionId")]
+        public async Task<IActionResult> GetDecisionAssignmentByDecisionId([FromBody] GetDecisionAssignmentByDecisionIdQuery request, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request, cancellationToken);
+            if (!result.Success) return BadRequest(result);
             return Ok(result);
         }
 
-        [HttpPost("[action]")]
-        public async Task<IActionResult> GetDecisionAssignmentByUserId(GetDecisionAssignmentByUserIdQuery request , CancellationToken cancellationToken)
+        [HttpPost("GetDecisionAssignmentByUserId")]
+        public async Task<IActionResult> GetDecisionAssignmentByUserId([FromBody] GetDecisionAssignmentByUserIdQuery request, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request, cancellationToken);
+            if (!result.Success) return BadRequest(result);
             return Ok(result);
         }
 
-        [HttpPost("[action]")]
-        public async Task<IActionResult> GetMeetingDecisionProgress(GetMeetingDecisionProgressQuery request , CancellationToken cancellationToken)
+        [HttpPost("GetMeetingDecisionProgress")]
+        public async Task<IActionResult> GetMeetingDecisionProgress([FromBody] GetMeetingDecisionProgressQuery request, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request, cancellationToken);
+            if (!result.Success) return BadRequest(result);
             return Ok(result);
         }
 
-        [HttpPost("[action]")]
-        public async Task<IActionResult> GetDetailsDecisionByUserId(GetDetailsDecisionByUserIdQuery request , CancellationToken cancellationToken)
+        [HttpPost("GetDetailsDecisionByUserId")]
+        public async Task<IActionResult> GetDetailsDecisionByUserId([FromBody] GetDetailsDecisionByUserIdQuery request, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request, cancellationToken);
+            if (!result.Success) return BadRequest(result);
             return Ok(result);
         }
     }

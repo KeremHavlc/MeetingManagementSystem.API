@@ -8,36 +8,43 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MeetingManagementSystem.Presentation.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class UserController : ApiController
     {
         public UserController(IMediator mediator) : base(mediator)
         {
         }
-        [HttpPost("[action]")]
-        public async Task<IActionResult> GetUserNameByUserId (GetUserNameByIdQuery request , CancellationToken cancellationToken)
+
+        [HttpPost("GetUserNameByUserId")]
+        public async Task<IActionResult> GetUserNameByUserId([FromBody] GetUserNameByIdQuery request, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request, cancellationToken);
+            if (!result.Success) return BadRequest(result);
             return Ok(result);
         }
 
-        [HttpPost("[action]")]
-        public async Task<IActionResult> GetUserIdByUsernameOrEmail(GetUserIdByUsernameOrEmailQuery request , CancellationToken cancellationToken)
+        [HttpPost("GetUserIdByUsernameOrEmail")]
+        public async Task<IActionResult> GetUserIdByUsernameOrEmail([FromBody] GetUserIdByUsernameOrEmailQuery request, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request, cancellationToken);
+            if (!result.Success) return BadRequest(result);
             return Ok(result);
         }
 
-        [HttpPost("[action]")]
-        public async Task<IActionResult> GetUserInfo (GetUserInfoQuery request , CancellationToken cancellationToken)
+        [HttpPost("GetUserInfo")]
+        public async Task<IActionResult> GetUserInfo(GetUserInfoQuery request, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request, cancellationToken);
+            if (!result.Success) return BadRequest(result);
             return Ok(result);
         }
 
-        [HttpPost("[action]")]
-        public async Task<IActionResult> UpdateUser(UpdateUserCommand request , CancellationToken cancellationToken)
+        [HttpPut("UpdateUser")]
+        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserCommand request, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request, cancellationToken);
+            if (!result.Success) return BadRequest(result);
             return Ok(result);
         }
     }

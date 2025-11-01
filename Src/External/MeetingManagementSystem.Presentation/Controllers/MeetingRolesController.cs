@@ -9,39 +9,51 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MeetingManagementSystem.Presentation.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class MeetingRolesController : ApiController
     {
         public MeetingRolesController(IMediator mediator) : base(mediator)
         {
         }
-        [HttpPost("[action]")]
-        public async Task<IActionResult> CreateMeetingRole(CreateMeetingRoleCommand request , CancellationToken cancellationToken)
+
+        [HttpPost("CreateMeetingRole")]
+        public async Task<IActionResult> CreateMeetingRole([FromBody] CreateMeetingRoleCommand request, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request, cancellationToken);
+            if (!result.Success) return BadRequest(result);
             return Ok(result);
         }
-        [HttpPost("[action]")]
-        public async Task<IActionResult> DeleteMeetingRole(DeleteMeetingRoleCommand request , CancellationToken cancellationToken)
+
+        [HttpDelete("DeleteMeetingRole")]
+        public async Task<IActionResult> DeleteMeetingRole([FromBody] DeleteMeetingRoleCommand request, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request, cancellationToken);
+            if (!result.Success) return BadRequest(result);
             return Ok(result);
         }
-        [HttpPost("[action]")]
-        public async Task<IActionResult> GetAllRoles(GetAllRolesQuery request, CancellationToken cancellationToken)
+
+        [HttpPost("GetAllRoles")]
+        public async Task<IActionResult> GetAllRoles([FromBody] GetAllRolesQuery request, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request, cancellationToken);
+            if (!result.Success) return BadRequest(result);
             return Ok(result);
         }
-        [HttpPost("[action]")]
-        public async Task<IActionResult> GetByIdRoles(GetByIdRolesQuery request , CancellationToken cancellationToken)
+
+        [HttpPost("GetByIdRoles")]
+        public async Task<IActionResult> GetByIdRoles([FromBody] GetByIdRolesQuery request, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request, cancellationToken);
+            if (!result.Success) return BadRequest(result);
             return Ok(result);
         }
-        [HttpPost("[action]")]
-        public async Task<IActionResult> GetByNameRoles(GetByNameRolesQuery request , CancellationToken cancellationToken)
+
+        [HttpPost("GetByNameRoles")]
+        public async Task<IActionResult> GetByNameRoles([FromBody] GetByNameRolesQuery request, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request, cancellationToken);
+            if (!result.Success) return BadRequest(result);
             return Ok(result);
         }
     }

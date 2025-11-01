@@ -12,47 +12,59 @@ using Microsoft.AspNetCore.Mvc;
 namespace MeetingManagementSystem.Presentation.Controllers
 {
     [Authorize]
+    [Route("api/[controller]")]
+    [ApiController]
     public class MeetingParticipantController : ApiController
     {
         public MeetingParticipantController(IMediator mediator) : base(mediator)
         {
         }
 
-        [HttpPost("[action]")]
-        public async Task<IActionResult> AddMeetingParticipant(AddMeetingParticipantCommand request , CancellationToken cancellationToken)
+        [HttpPost("AddMeetingParticipant")]
+        public async Task<IActionResult> AddMeetingParticipant([FromBody] AddMeetingParticipantCommand request, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request, cancellationToken);
-            return Ok(result);
-        }
-        [HttpPost("[action]")]
-        public async Task<IActionResult> DeleteMeetingParticipant(DeleteMeetingParticipantCommand request , CancellationToken cancellationToken)
-        {
-            var result = await _mediator.Send(request, cancellationToken);
-            return Ok(result);
-        }
-        [HttpPost("[action]")]
-        public async Task<IActionResult> GetMeetingParticipantsWithUsersAsync(GetMeetingParticipantsQuery request , CancellationToken cancellationToken)
-        {
-            var result = await _mediator.Send(request, cancellationToken);
-            return Ok(result);
-        }
-        [HttpPost("[action]")]
-        public async Task<IActionResult> GetMeetingParticipantsByUserId(GetMeetingParticipantByUserIdQuery request , CancellationToken cancellationToken)
-        {
-            var result = await _mediator.Send(request, cancellationToken);
-            return Ok(result);
-        }
-        [HttpPost("[action]")]
-        public async Task<IActionResult> JoinFromInvite(JoinMeetingFromInviteCommand request , CancellationToken cancellationToken)
-        {
-            var result = await _mediator.Send(request, cancellationToken);
+            if (!result.Success) return BadRequest(result);
             return Ok(result);
         }
 
-        [HttpPost("[action]")]
-        public async Task<IActionResult> GetMeetingParticipantByMeetingId(GetMeetingParticipantByMeetingIdQuery request , CancellationToken cancellationToken)
+        [HttpDelete("DeleteMeetingParticipant")]
+        public async Task<IActionResult> DeleteMeetingParticipant([FromBody] DeleteMeetingParticipantCommand request, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request, cancellationToken);
+            if (!result.Success) return BadRequest(result);
+            return Ok(result);
+        }
+
+        [HttpPost("GetMeetingParticipantsWithUsers")]
+        public async Task<IActionResult> GetMeetingParticipantsWithUsersAsync([FromBody] GetMeetingParticipantsQuery request, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(request, cancellationToken);
+            if (!result.Success) return BadRequest(result);
+            return Ok(result);
+        }
+
+        [HttpPost("GetMeetingParticipantsByUserId")]
+        public async Task<IActionResult> GetMeetingParticipantsByUserId([FromBody] GetMeetingParticipantByUserIdQuery request, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(request, cancellationToken);
+            if (!result.Success) return BadRequest(result);
+            return Ok(result);
+        }
+
+        [HttpPost("JoinFromInvite")]
+        public async Task<IActionResult> JoinFromInvite([FromBody] JoinMeetingFromInviteCommand request, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(request, cancellationToken);
+            if (!result.Success) return BadRequest(result);
+            return Ok(result);
+        }
+
+        [HttpPost("GetMeetingParticipantByMeetingId")]
+        public async Task<IActionResult> GetMeetingParticipantByMeetingId([FromBody] GetMeetingParticipantByMeetingIdQuery request, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(request, cancellationToken);
+            if (!result.Success) return BadRequest(result);
             return Ok(result);
         }
     }

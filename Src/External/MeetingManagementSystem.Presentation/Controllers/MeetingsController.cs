@@ -8,33 +8,43 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MeetingManagementSystem.Presentation.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class MeetingsController : ApiController
     {
         public MeetingsController(IMediator mediator) : base(mediator)
         {
         }
-        [HttpPost("[action]")]
-        public async Task<IActionResult> CreateMeeting(CreateMeetingCommand request, CancellationToken cancellationToken)
+
+        [HttpPost("CreateMeeting")]
+        public async Task<IActionResult> CreateMeeting([FromBody] CreateMeetingCommand request, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request, cancellationToken);
+            if (!result.Success) return BadRequest(result);
             return Ok(result);
         }
-        [HttpPost("[action]")]
-        public async Task<IActionResult> DeleteMeeting(DeleteMeetingCommand request, CancellationToken cancellationToken)
+
+        [HttpDelete("DeleteMeeting")]
+        public async Task<IActionResult> DeleteMeeting([FromBody] DeleteMeetingCommand request, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request, cancellationToken);
+            if (!result.Success) return BadRequest(result);
             return Ok(result);
         }
-        [HttpPost("[action]")]
-        public async Task<IActionResult> GetMeetingById(GetMeetingByIdQuery request , CancellationToken cancellationToken)
+
+        [HttpPost("GetMeetingById")]
+        public async Task<IActionResult> GetMeetingById([FromBody] GetMeetingByIdQuery request, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request, cancellationToken);
+            if (!result.Success) return BadRequest(result);
             return Ok(result);
         }
-        [HttpPost("[action]")]
-        public async Task<IActionResult> GetMeetingByUserId (GetMeetingsByUserIdQuery request , CancellationToken cancellationToken)
+
+        [HttpPost("GetMeetingByUserId")]
+        public async Task<IActionResult> GetMeetingByUserId([FromBody] GetMeetingsByUserIdQuery request, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request, cancellationToken);
+            if (!result.Success) return BadRequest(result);
             return Ok(result);
         }
     }
