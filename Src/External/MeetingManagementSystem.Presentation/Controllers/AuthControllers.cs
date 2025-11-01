@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using MeetingManagementSystem.Application.Features.AuthFeatures.Commands.ChangePasswordCommand;
 using MeetingManagementSystem.Application.Features.AuthFeatures.Commands.ChangePasswordUsingTokenCommand;
+using MeetingManagementSystem.Application.Features.AuthFeatures.Commands.ConfirmEmailCommand;
 using MeetingManagementSystem.Application.Features.AuthFeatures.Commands.ForgotPasswordCommand;
 using MeetingManagementSystem.Application.Features.AuthFeatures.Commands.LoginCommand;
 using MeetingManagementSystem.Application.Features.AuthFeatures.Commands.RegisterCommand;
@@ -57,6 +58,13 @@ namespace MeetingManagementSystem.Presentation.Controllers
         {
             var result = await _mediator.Send(request, cancellationToken);
             return Ok(result);
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> ConfirmEmail([FromBody] ConfirmEmailCommand command)
+        {
+            var response = await _mediator.Send(command);
+            return Ok(response);
         }
     }
 }
