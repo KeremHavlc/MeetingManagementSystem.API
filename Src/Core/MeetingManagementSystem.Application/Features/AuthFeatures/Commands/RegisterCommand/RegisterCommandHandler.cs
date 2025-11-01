@@ -35,6 +35,7 @@ namespace MeetingManagementSystem.Application.Features.AuthFeatures.Commands.Reg
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             var link = $"http://localhost:5173/verify-email?email={user.Email}&token={Uri.EscapeDataString(token)}";
 
+
             var htmlBody = $@"
 <!DOCTYPE html>
 <html lang='tr'>

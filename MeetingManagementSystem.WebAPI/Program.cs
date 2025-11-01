@@ -99,17 +99,16 @@ builder.Services.AddSignalR();
 // CORS ayarlarý
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("OpenCorsPolicy", policy =>
-    {
+    options.AddPolicy("AllowReactApp", policy =>
         policy.WithOrigins(
-            "http://localhost:5173",
-            "http://localhost:5174"
+            "https://meetingmanagementsystemclient.azurewebsites.net",
+            "http://localhost:5173"
         )
         .AllowAnyHeader()
         .AllowAnyMethod()
-        .AllowCredentials();
-    });
+        .AllowCredentials());
 });
+
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
@@ -126,7 +125,7 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
-app.UseCors("OpenCorsPolicy"); 
+app.UseCors("AllowReactApp"); 
 
 app.UseAuthentication();
 app.UseAuthorization();
