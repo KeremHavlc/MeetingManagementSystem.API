@@ -12,6 +12,7 @@ namespace MeetingManagementSystem.Domain.Entities
         public ICollection<Meeting> Meetings { get; set; }
         public ICollection<MeetingParticipant> MeetingParticipants { get; set; }
         public ICollection<DecisionAssignment> DecisionAssignments { get; set; }
+        public UserSettings UserSettings { get; set; }
 
     }
 }

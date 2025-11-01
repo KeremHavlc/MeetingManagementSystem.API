@@ -4,6 +4,7 @@ using MeetingManagementSystem.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MeetingManagementSystem.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251101115628_addUserSettingsTable")]
+    partial class addUserSettingsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -363,10 +366,10 @@ namespace MeetingManagementSystem.Persistence.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("ReceiveDecisionNotifications")
+                    b.Property<bool>("ReceiveChatNotifications")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("ReceiveMeetingJoinNotifications")
+                    b.Property<bool>("ReceiveDecisionNotifications")
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("UpdatedAt")

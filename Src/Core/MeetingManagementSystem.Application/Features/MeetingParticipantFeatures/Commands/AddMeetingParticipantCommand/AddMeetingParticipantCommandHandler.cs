@@ -14,14 +14,14 @@ namespace MeetingManagementSystem.Application.Features.MeetingParticipantFeature
         private readonly IMeetingParticipantRepository _meetingParticipantRepository;
         private readonly UserManager<AppUser> _userManager;
         private readonly IMeetingRoleRepository _meetingRoleRepository;
-        private readonly IHttpContextAccessor _httpContextAccessor; 
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public AddMeetingParticipantCommandHandler(
             IMeetingRepository meetingRepository,
             IMeetingParticipantRepository meetingParticipantRepository,
             UserManager<AppUser> userManager,
             IMeetingRoleRepository meetingRoleRepository,
-            IHttpContextAccessor httpContextAccessor) 
+            IHttpContextAccessor httpContextAccessor)
         {
             _meetingRepository = meetingRepository;
             _meetingParticipantRepository = meetingParticipantRepository;

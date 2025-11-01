@@ -18,6 +18,7 @@ namespace MeetingManagementSystem.Persistence.Context
         public DbSet<MeetingRole> MeetingRole { get; set; }
         public DbSet<ChatMessage> ChatMessage { get; set; }
         public DbSet<MeetingInvite> MeetingInvites { get; set; }
+        public DbSet<UserSettings> UserSettings { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -96,6 +97,15 @@ namespace MeetingManagementSystem.Persistence.Context
                 entity.Property(x => x.CreatedAt)
                       .HasDefaultValueSql("GETUTCDATE()");
             });
+
+            //UserSetting -> AppUser (1:1)
+            modelBuilder.Entity<AppUser>()
+                .HasOne(u => u.UserSettings)
+                .WithOne(s => s.AppUser)
+                .HasForeignKey<UserSettings>(s => s.AppUserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
             //Identity Kütüphanesinde kullanılmayacak tabloların kaldırılması
             modelBuilder.Ignore<IdentityUserLogin<Guid>>();
             modelBuilder.Ignore<IdentityUserToken<Guid>>();
