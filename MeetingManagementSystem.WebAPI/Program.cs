@@ -22,7 +22,7 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(conn
 //Persistence Tier Service Registration
 builder.Services.AddPersistenceService();
 //Infrastructure Tier Service Registration
-builder.Services.AddInfrastructureService();
+builder.Services.AddInfrastructureService(builder.Configuration);
 
 //Controller baþka katmana eklendi!
 builder.Services.AddControllers()
