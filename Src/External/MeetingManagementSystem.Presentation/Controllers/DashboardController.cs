@@ -3,10 +3,12 @@ using MeetingManagementSystem.Application.Features.DashboardFeatures.Queries.Get
 using MeetingManagementSystem.Application.Features.DashboardFeatures.Queries.GetMeetingStatisticsQuery;
 using MeetingManagementSystem.Application.Features.DashboardFeatures.Queries.GetUpcomingMeetingsQuery;
 using MeetingManagementSystem.Presentation.Abstraction;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MeetingManagementSystem.Presentation.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class DashboardController : ApiController

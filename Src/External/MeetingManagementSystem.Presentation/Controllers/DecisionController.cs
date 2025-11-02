@@ -5,10 +5,12 @@ using MeetingManagementSystem.Application.Features.DecisionFeatures.Commands.Upd
 using MeetingManagementSystem.Application.Features.DecisionFeatures.Queries.GetDecisionByIdQuery;
 using MeetingManagementSystem.Application.Features.DecisionFeatures.Queries.GetDecisionsByMeetingIdQuery;
 using MeetingManagementSystem.Presentation.Abstraction;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MeetingManagementSystem.Presentation.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class DecisionController : ApiController

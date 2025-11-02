@@ -4,10 +4,12 @@ using MeetingManagementSystem.Application.Features.UserFeatures.Queries.GetUserI
 using MeetingManagementSystem.Application.Features.UserFeatures.Queries.GetUserInfoQuery;
 using MeetingManagementSystem.Application.Features.UserFeatures.Queries.GetUserNameByIdQuery;
 using MeetingManagementSystem.Presentation.Abstraction;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MeetingManagementSystem.Presentation.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ApiController

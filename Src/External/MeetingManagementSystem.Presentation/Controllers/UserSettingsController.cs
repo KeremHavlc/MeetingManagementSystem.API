@@ -3,10 +3,12 @@ using MeetingManagementSystem.Application.Features.UserSettingsFeatures.Commands
 using MeetingManagementSystem.Application.Features.UserSettingsFeatures.Commands.UpdateUserSettingsCommand;
 using MeetingManagementSystem.Application.Features.UserSettingsFeatures.Queries.GetUserSettingsQuery;
 using MeetingManagementSystem.Presentation.Abstraction;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MeetingManagementSystem.Presentation.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserSettingsController : ApiController

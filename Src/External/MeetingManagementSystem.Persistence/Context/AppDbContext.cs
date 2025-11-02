@@ -1,4 +1,5 @@
 ﻿using MeetingManagementSystem.Domain.Entities;
+using MeetingManagementSystem.Persistence.Seed;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -105,6 +106,8 @@ namespace MeetingManagementSystem.Persistence.Context
                 .HasForeignKey<UserSettings>(s => s.AppUserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            //Seed Data Configuration
+            modelBuilder.ApplyConfiguration(new MeetingRoleConfiguration());
 
             //Identity Kütüphanesinde kullanılmayacak tabloların kaldırılması
             modelBuilder.Ignore<IdentityUserLogin<Guid>>();

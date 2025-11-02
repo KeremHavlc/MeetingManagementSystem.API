@@ -4,10 +4,12 @@ using MeetingManagementSystem.Application.Features.MeetingFeatures.Commands.Dele
 using MeetingManagementSystem.Application.Features.MeetingFeatures.Queries.GetMeetingByIdQuery;
 using MeetingManagementSystem.Application.Features.MeetingFeatures.Queries.GetMeetingsByUserIdQuery;
 using MeetingManagementSystem.Presentation.Abstraction;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MeetingManagementSystem.Presentation.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class MeetingsController : ApiController

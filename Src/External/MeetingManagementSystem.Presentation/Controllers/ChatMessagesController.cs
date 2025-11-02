@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MeetingManagementSystem.Presentation.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class ChatMessagesController : ApiController
     {
         public ChatMessagesController(IMediator mediator) : base(mediator)

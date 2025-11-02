@@ -5,10 +5,12 @@ using MeetingManagementSystem.Application.Features.MeetingRoleFeatures.Queries.G
 using MeetingManagementSystem.Application.Features.MeetingRoleFeatures.Queries.GetByIdRolesQuery;
 using MeetingManagementSystem.Application.Features.MeetingRoleFeatures.Queries.GetByNameRolesQuery;
 using MeetingManagementSystem.Presentation.Abstraction;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MeetingManagementSystem.Presentation.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class MeetingRolesController : ApiController

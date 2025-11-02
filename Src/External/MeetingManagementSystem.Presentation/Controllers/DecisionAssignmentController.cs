@@ -7,10 +7,12 @@ using MeetingManagementSystem.Application.Features.DecisionAssignmentFeatures.Qu
 using MeetingManagementSystem.Application.Features.DecisionAssignmentFeatures.Queries.GetDetailsDecisionByUserIdQuery;
 using MeetingManagementSystem.Application.Features.DecisionAssignmentFeatures.Queries.GetMeetingDecisionProgressQuery;
 using MeetingManagementSystem.Presentation.Abstraction;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MeetingManagementSystem.Presentation.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class DecisionAssignmentController : ApiController

@@ -7,31 +7,33 @@ using MeetingManagementSystem.Application.Features.AuthFeatures.Commands.LoginCo
 using MeetingManagementSystem.Application.Features.AuthFeatures.Commands.RegisterCommand;
 using MeetingManagementSystem.Application.Features.AuthFeatures.Commands.SignInCommand;
 using MeetingManagementSystem.Presentation.Abstraction;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MeetingManagementSystem.Presentation.Controllers
 {
+    [Authorize]
     public class AuthControllers : ApiController
     {
         public AuthControllers(IMediator mediator) : base(mediator)
         {
         }
 
-
+        [AllowAnonymous]
         [HttpPost("[action]")]
         public async Task<IActionResult> Register(RegisterCommand request , CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request, cancellationToken);
             return Ok(result);
         }
-
+        [AllowAnonymous]
         [HttpPost("[action]")]
         public async Task<IActionResult> Login(LoginCommand request , CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request, cancellationToken);
             return Ok(result);
         }
-
+        [AllowAnonymous]
         [HttpPost("[action]")]
         public async Task<IActionResult> SignIn(SignInCommand request , CancellationToken cancellationToken)
         {
@@ -59,7 +61,7 @@ namespace MeetingManagementSystem.Presentation.Controllers
             var result = await _mediator.Send(request, cancellationToken);
             return Ok(result);
         }
-
+        [AllowAnonymous]
         [HttpPost("[action]")]
         public async Task<IActionResult> ConfirmEmail([FromBody] ConfirmEmailCommand command)
         {

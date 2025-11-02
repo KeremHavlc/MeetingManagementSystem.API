@@ -2,10 +2,12 @@
 using MeetingManagementSystem.Application.Features.MeetingInviteFeatures.Commands;
 using MeetingManagementSystem.Application.Features.MeetingInviteFeatures.Queries;
 using MeetingManagementSystem.Presentation.Abstraction;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MeetingManagementSystem.Presentation.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class MeetingInviteController : ApiController
