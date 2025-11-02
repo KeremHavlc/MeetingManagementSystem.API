@@ -33,7 +33,8 @@ namespace MeetingManagementSystem.Application.Features.AuthFeatures.Commands.For
             }
 
             string token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var link = $"http://localhost:5173/reset-password?email={user.Email}&token={Uri.EscapeDataString(token)}";
+            var link = $"https://meeting-management-system-client.vercel.app/reset-password?email={user.Email}&token={Uri.EscapeDataString(token)}";
+
 
             var htmlBody = $@"
 <!DOCTYPE html>

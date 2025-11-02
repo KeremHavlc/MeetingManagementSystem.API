@@ -25,7 +25,8 @@ namespace MeetingManagementSystem.Application.Features.MeetingInviteFeatures.Com
                 IsUsed = false
             };
             await _meetingInviteRepository.AddAsync(invite);
-            string link = $"http://localhost:5173/invite/{token}";
+            string link = $"https://meeting-management-system-client.vercel.app/invite/{token}";
+
             return new CreateMeetingInviteResponseDto
             {
                 InviteLink = link,

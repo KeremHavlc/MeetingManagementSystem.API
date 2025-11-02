@@ -1,3 +1,5 @@
+using FluentValidation;
+using MediatR;
 using MeetingManagementSystem.Application.Abstractions;
 using MeetingManagementSystem.Domain.Entities;
 using MeetingManagementSystem.Infrastructure;
@@ -5,6 +7,7 @@ using MeetingManagementSystem.Infrastructure.Authentication;
 using MeetingManagementSystem.Persistence;
 using MeetingManagementSystem.Persistence.Context;
 using MeetingManagementSystem.WebAPI.Hubs;
+using MeetingManagementSystem.WebAPI.Middleware;
 using MeetingManagementSystem.WebAPI.OptionsSetup;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -14,11 +17,11 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
-
 //Db baðlantýsý
-var connectionString = builder.Configuration.GetConnectionString("sqlServer");
-builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
-
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(connectionString, sqlOptions => sqlOptions.EnableRetryOnFailure())
+);
 //Persistence Tier Service Registration
 builder.Services.AddPersistenceService();
 //Infrastructure Tier Service Registration
@@ -46,6 +49,12 @@ builder.Services.AddIdentity<AppUser, AppRole>(options =>
 .AddSignInManager<SignInManager<AppUser>>() //SignInManager için
 .AddDefaultTokenProviders()
 .AddEntityFrameworkStores<AppDbContext>();
+
+//FluentValidation
+builder.Services.AddValidatorsFromAssembly(typeof(MeetingManagementSystem.Application.AssemblyReference).Assembly);
+// Validation pipeline (MediatR pipeline'ýna ekle)
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(MeetingManagementSystem.Application.Behaviors.ValidationBehavior<,>));
+
 
 builder.Services.AddDataProtection();
 
@@ -102,15 +111,17 @@ builder.Services.AddCors(options =>
     options.AddPolicy("OpenCorsPolicy", policy =>
     {
         policy.WithOrigins(
-            "http://localhost:5173",
-            "http://localhost:5174"
+            "https://meetingmanagementsystemclient.azurewebsites.net",
+            "https://meeting-management-system-client.vercel.app",
+            "http://localhost:5173"
         )
         .AllowAnyHeader()
         .AllowAnyMethod()
         .AllowCredentials();
     });
 });
-
+//Error Middleware Service Registration
+builder.Services.AddTransient<ExceptionMiddleware>();
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
@@ -124,7 +135,7 @@ if (app.Environment.IsDevelopment())
 }
 app.UseSwagger();
 app.UseSwaggerUI();
-
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseHttpsRedirection();
 app.UseCors("OpenCorsPolicy"); 
 
