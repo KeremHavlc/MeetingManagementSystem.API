@@ -357,6 +357,9 @@ healthchecksdb
 MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
+# Local configuration files
+appsettings.Development.json
+MeetingManagementSystem.WebAPI/appsettings.Development.json
 .ionide/
 
 # Fody - auto-generated XML schema
