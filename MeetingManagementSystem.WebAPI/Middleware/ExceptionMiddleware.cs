@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Text.Json;
 using MeetingManagementSystem.Domain.Dtos;
+using Serilog;
 
 namespace MeetingManagementSystem.WebAPI.Middleware
 {
@@ -21,22 +22,24 @@ namespace MeetingManagementSystem.WebAPI.Middleware
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Bir hata yakalandı!");
-                await HandleExceptionAsync(context, ex);
+                var traceId = Guid.NewGuid().ToString();
+                Log.Error(ex, "Unhandled exception. TraceId: {TraceId}, Path: {Path}", traceId, context.Request.Path);
+
+                await HandleExceptionAsync(context, ex, traceId);
             }
         }
 
-        private static async Task HandleExceptionAsync(HttpContext context, Exception ex)
+        private static async Task HandleExceptionAsync(HttpContext context, Exception ex, string traceId)
         {
             context.Response.ContentType = "application/json";
 
             var response = new MessageResponse
             {
                 Success = false,
-                Data = null
+                Data = null,
+                Message = $"Beklenmeyen bir hata oluştu. TraceId: {traceId}"
             };
 
-            // FluentValidation hatası mı?
             if (ex is FluentValidation.ValidationException vex)
             {
                 context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
@@ -45,7 +48,6 @@ namespace MeetingManagementSystem.WebAPI.Middleware
             else
             {
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                response.Message = $"Beklenmeyen bir hata oluştu: {ex.Message}";
             }
 
             var json = JsonSerializer.Serialize(response);

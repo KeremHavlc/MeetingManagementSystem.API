@@ -15,8 +15,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
+using Serilog.Sinks.MSSqlServer;
 using System.Text;
 using System.Threading.RateLimiting;
+
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration
@@ -29,6 +32,24 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString, sqlOptions => sqlOptions.EnableRetryOnFailure())
 );
+
+//Serilog
+builder.Host.UseSerilog((ctx, services, cfg) =>
+{
+    var conn = ctx.Configuration.GetConnectionString("DefaultConnection");
+    if (string.IsNullOrWhiteSpace(conn))
+        throw new InvalidOperationException("DefaultConnection not found.\r\nIs it defined under Configuration  Connection strings in your Azure App Service?");
+
+    cfg.MinimumLevel.Error()
+       .WriteTo.MSSqlServer(
+           connectionString: conn,
+           sinkOptions: new MSSqlServerSinkOptions
+           {
+               TableName = "Logs",
+               AutoCreateSqlTable = false
+           });
+});
+
 //Persistence Tier Service Registration
 builder.Services.AddPersistenceService();
 //Infrastructure Tier Service Registration
@@ -154,7 +175,7 @@ builder.Services.AddRateLimiter(options =>
             _ => new FixedWindowRateLimiterOptions
             {
                 PermitLimit = 5,
-                Window = TimeSpan.FromMinutes(5),
+                Window = TimeSpan.FromMinutes(2),
                 QueueLimit = 0
             });
     });
