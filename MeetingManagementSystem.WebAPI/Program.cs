@@ -12,9 +12,11 @@ using MeetingManagementSystem.WebAPI.OptionsSetup;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration
@@ -125,6 +127,39 @@ builder.Services.AddCors(options =>
         .AllowCredentials();
     });
 });
+//RateLimit
+builder.Services.AddRateLimiter(options =>
+{
+    // Global limiter: IP bazlý, dakikada 60 istek
+    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(context =>
+    {
+        var ip = context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+        return RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: ip,
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 60, // 60 istek
+                Window = TimeSpan.FromMinutes(1),
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                QueueLimit = 0 //429 kuyruk yok
+            });
+    });
+
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.AddPolicy("AuthTight", httpContext =>
+    {
+        var ip = httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+        return RateLimitPartition.GetFixedWindowLimiter(
+            ip,
+            _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 5,
+                Window = TimeSpan.FromMinutes(5),
+                QueueLimit = 0
+            });
+    });
+});
+
 //Error Middleware Service Registration
 builder.Services.AddTransient<ExceptionMiddleware>();
 builder.Services.AddControllers();
@@ -140,12 +175,13 @@ if (app.Environment.IsDevelopment())
 }
 app.UseSwagger();
 app.UseSwaggerUI();
-app.UseMiddleware<ExceptionMiddleware>();
 app.UseHttpsRedirection();
 app.UseCors("OpenCorsPolicy"); 
+app.UseRateLimiter();
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.MapHub<ChatHub>("/chatHub");
 app.MapControllers();
