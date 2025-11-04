@@ -25,7 +25,7 @@ namespace MeetingManagementSystem.Application.Features.MeetingInviteFeatures.Com
                 IsUsed = false
             };
             await _meetingInviteRepository.AddAsync(invite);
-            string link = $"https://meeting-management-system-client.vercel.app/invite/{token}";
+            string link = $"https://meets.com.tr/invite/{token}";
 
             return new CreateMeetingInviteResponseDto
             {

@@ -33,7 +33,8 @@ namespace MeetingManagementSystem.Application.Features.AuthFeatures.Commands.Reg
             }
 
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            var link = $"https://meeting-management-system-client.vercel.app/verify-email?email={user.Email}&token={Uri.EscapeDataString(token)}";
+            var link = $"https://meets.com.tr/verify-email?email={user.Email}&token={Uri.EscapeDataString(token)}";
+
 
 
             var htmlBody = $@"
