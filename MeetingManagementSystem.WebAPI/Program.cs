@@ -141,7 +141,9 @@ builder.Services.AddCors(options =>
         policy.WithOrigins(
             "https://meetingmanagementsystemclient.azurewebsites.net",
             "https://meeting-management-system-client.vercel.app",
-            "http://localhost:5173"
+            "http://localhost:5173",
+            "https://meets.com.tr",
+            "https://www.meets.com.tr"
         )
         .AllowAnyHeader()
         .AllowAnyMethod()
@@ -155,29 +157,34 @@ builder.Services.AddRateLimiter(options =>
     options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(context =>
     {
         var ip = context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
-        return RateLimitPartition.GetFixedWindowLimiter(
+        return RateLimitPartition.GetTokenBucketLimiter(
             partitionKey: ip,
-            factory: _ => new FixedWindowRateLimiterOptions
+            factory: _ => new TokenBucketRateLimiterOptions
             {
-                PermitLimit = 60, // 60 istek
-                Window = TimeSpan.FromMinutes(1),
+                TokenLimit = 60, //Maksimum 60 token
+                TokensPerPeriod = 10, //her periyotta 10 token eklenecek
+                ReplenishmentPeriod = TimeSpan.FromSeconds(10), // 10 saniyede bir doldurma
+                AutoReplenishment = true, // Otomatik doldurma
                 QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
-                QueueLimit = 0 //429 kuyruk yok
+                QueueLimit = 0 // Kuyruk yok -> 429 dönder
             });
     });
 
     options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    //AuthTight policy -> login/register endpointleri için sýký limit
     options.AddPolicy("AuthTight", httpContext =>
     {
         var ip = httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
-        return RateLimitPartition.GetFixedWindowLimiter(
-            ip,
-            _ => new FixedWindowRateLimiterOptions
+        return RateLimitPartition.GetTokenBucketLimiter(
+            partitionKey: ip,
+            factory: _ => new TokenBucketRateLimiterOptions
             {
-                PermitLimit = 5,
-                Window = TimeSpan.FromMinutes(2),
+                TokenLimit = 5, // Maksimum 5 token
+                TokensPerPeriod = 1, // 1  token yenileme
+                ReplenishmentPeriod = TimeSpan.FromSeconds(30), //30 saniye de bir token ekle
+                AutoReplenishment = true,
                 QueueLimit = 0
-            });
+            });           
     });
 });
 
